@@ -79,7 +79,7 @@
         </div>
         <div class="form-group">
             <label for="state">State<span style="color: red;">*</span>:</label>
-            <select name="state" class="form-control" id="state-dropdown">
+            <select name="state" class="form-control" id="state-dropdowns">
                 <option value="">Select-state</option>
                 <?php
                     if (isset($resul['country'])) {
@@ -95,7 +95,7 @@
 
         <div class="form-group">
             <label for="city">City<span style="color: red;">*</span>:</label>
-            <select name="city" class="form-control" id="city-dropdown">
+            <select name="city" class="form-control" id="city-dropdowns">
                 <option value="">Select-city</option>
                 <?php
                     if(isset($resul['state'])){
@@ -109,7 +109,8 @@
             </select>
         </div>
         <?php 
-                                $hobbies = unserialize($resul['hobbies']);
+      $hobbies = isset($resul['hobbies']) ? unserialize($resul['hobbies']) : [];
+
                             ?>
         <div class="row">
             <div class="col-sm-3">
@@ -151,60 +152,67 @@
 
 <script>
 $(document).ready(function() {
-    $('#country_dropdown').on('change', function() {
-        var country_id = this.value;
-        $.ajax({
-            url: "state.php",
-            type: "POST",
-            data: {
-                country_data: country_id
-            },
-            success: function(result) {
-                $("#state-dropdown").html(result);
-            }
-        });
-    });
 
-    $('#state-dropdown').on('change', function() {
-        var state_id = this.value;
-        $.ajax({
-            url: "city.php",
-            type: "POST",
-            data: {
-                state_data: state_id
-            },
-            success: function(result) {
-                $("#city-dropdown").html(result);
-            }
-        });
+});
+
+$(document).on('change', '#country_dropdown', function() {
+    var country_id = this.value;
+    console.log("Country ID:", country_id);
+    $.ajax({
+        url: "state.php",
+        type: "POST",
+        data: {
+            country_data: country_id
+        },
+        success: function(result) {
+            console.log("State.php Response:", result);
+            $("#state-dropdowns").html(result);
+        }
+    });
+});
+$(document).on('change', '#state-dropdowns', function() {
+
+    var state_id = this.value;
+    console.log("State ID:", state_id);
+    $.ajax({
+        url: "city.php",
+        type: "POST",
+        data: {
+            state_data: state_id
+        },
+        success: function(result) {
+            console.log("City.php Response:", result);
+            $("#city-dropdowns").html(result);
+        }
     });
 });
 
-// function validate(event) {
-//     var fname = $('input[name="firstname"]').val().trim();
-//     var lname = $('input[name="lastname"]').val().trim();
-//     var gender = $('input[name="gen"]:checked').val();
-//     var country = $('select[name="country"]').val();
-//     var state = $('select[name="state"]').val();
-//     var city = $('select[name="city"]').val();
 
-//     if (
-//         fname === '' ||
-//         lname === '' ||
-//         gender === undefined ||
-//         country === '' || country === 'Select-country' ||
-//         state === '' || state === 'Select-state' ||
-//         city === '' || city === 'Select-city'
-//     ) {
-//         var emptyFields = [];
-//         if (fname === '') emptyFields.push('First Name');
-//         if (lname === '') emptyFields.push('Last Name');
-//         if (gender === undefined) emptyFields.push('Gender');
-//         if (country === '' || country === 'Select-country') emptyFields.push('Country');
-//         if (state === '' || state === 'Select-state') emptyFields.push('State');
-//         if (city === '' || city === 'Select-city') emptyFields.push('City');
-//         alert('Please fill out all required fields: ' + emptyFields.join(', '));
-//         event.preventDefault();
-//     }
-// }
+function validate(event) {
+    var fname = $('input[name="firstname"]').val().trim();
+    var lname = $('input[name="lastname"]').val().trim();
+    var gender = $('input[name="gen"]:checked').val();
+    var country = $('select[name="country"]').val();
+    var state = $('select[name="state"]').val();
+    var city = $('select[name="city"]').val();
+
+    if (
+        fname === '' ||
+        lname === '' ||
+        gender === undefined ||
+        country === '' || country === 'Select-country' ||
+        state === '' || state === 'Select-state' ||
+        city === '' || city === 'Select-city'
+    ) {
+        var emptyFields = [];
+        if (fname === '') emptyFields.push('First Name');
+        if (lname === '') emptyFields.push('Last Name');
+        if (gender === undefined) emptyFields.push('Gender');
+        if (country === '' || country === 'Select-country') emptyFields.push('Country');
+        if (state === '' || state === 'Select-state') emptyFields.push('State');
+        if (city === '' || city === 'Select-city') emptyFields.push('City');
+        alert('Please fill out all required fields: ' + emptyFields.join(', '));
+        event.preventDefault();
+    }
+}
 </script>

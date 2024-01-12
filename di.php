@@ -1,6 +1,6 @@
 <?php
 include("connection.php");
-// include("changeprofileimage_modal.php");
+include("changeprofileimage_modal.php");
 ob_start();
 session_start();
 require('fpdf/fpdf.php');
@@ -43,7 +43,7 @@ if ($res) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -113,12 +113,12 @@ if ($res) {
                                 <li><a class="dropdown-item btn-outline-primary" href="logout.php">Logout</a></li>
                                 <li><a class="dropdown-item" href="changepass.php">Change Password</a></li>
                                 <li>
-                                    <button type='button' class='btn edit-btn'
-                                        data-id="<?php echo $resu['id']; ?>" data-bs-toggle='modal'
-                                        data-bs-target='#exampleModal'>Change Profile</button>
+                                    <button type="button" id="openProfileModalButton" data-id=".$result['id']." class="dropdown-item editimage"
+                                        data-toggle="modal" data-target="#changeProfileImageModal">
+                                        Change Profile Image
+                                    </button>
                                 </li>
                             </ul>
-
                         </div>
                     </div>
 
@@ -501,7 +501,7 @@ if ($res) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> -->
 
-            <!-- <div class="modal fade" id="changeProfileImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabels">
+            <div class="modal fade" id="changeProfileImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabels">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -518,7 +518,7 @@ if ($res) {
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
 
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -588,7 +588,7 @@ if ($res) {
             console.log(editId);
             $.ajax({
                 type: "POST",
-                url: "fetch_data.php",
+                url: "changeprofileimage_modal.php",
                 data: {
                     id: editId
                 },
@@ -598,21 +598,21 @@ if ($res) {
             });
         });
 
-        // $('.editimage').on('click', function() {
-        //     var editId = $(this).data('id');
-        //     $('#changeProfileImageModal').modal('show');
-        //     console.log(editId);
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "fetch_data.php",
-        //         data: {
-        //             id: editId
-        //         },
-        //         success: function(response) {
-        //             $('#editprofile').html(response);
-        //         }
-        //     });
-        // });
+        $('.editimage').on('click', function() {
+            var editId = $(this).data('id');
+            $('#changeProfileImageModal').modal('show');
+            console.log(editId);
+            $.ajax({
+                type: "POST",
+                url: "fetch_data.php",
+                data: {
+                    id: editId
+                },
+                success: function(response) {
+                    $('#editprofile').html(response);
+                }
+            });
+        });
 
         $('#saveChangesBtn').on('click', function() {
             updateData();
